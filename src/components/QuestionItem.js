@@ -1,13 +1,19 @@
 import React from "react";
 
-function QuestionItem({ question }) {
-  const { id, prompt, answers, correctIndex } = question;
+function QuestionItem({ question, onDelete }) {
+  const { id, prompt, answers = [], correctIndex = 0 } = question;  
 
-  const options = answers.map((answer, index) => (
-    <option key={index} value={index}>
-      {answer}
-    </option>
-  ));
+  const options = Array.isArray(answers) && answers.length > 0
+    ? answers.map((answer, index) => (
+        <option key={index} value={index}>
+          {answer}
+        </option>
+      ))
+    : <option>No answers available</option>;  // Provide fallback in case answers is empty
+
+  function handleDeleteClick() {
+    onDelete(id);
+  }
 
   return (
     <li>
@@ -17,7 +23,7 @@ function QuestionItem({ question }) {
         Correct Answer:
         <select defaultValue={correctIndex}>{options}</select>
       </label>
-      <button>Delete Question</button>
+      <button onClick={handleDeleteClick}>Delete Question</button>
     </li>
   );
 }
